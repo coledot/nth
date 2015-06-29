@@ -1,0 +1,10 @@
+[package]
+name = "nth"
+version = "0.1.0"
+authors = ["Cole Thompson <cole.thompson@gmail.com>"]
+
+[[bin]]
+name = "nth"
+
+[dependencies]
+regex = "0.1.8"
