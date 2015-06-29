@@ -48,7 +48,7 @@ fn handle_input(column_numbers: &Vec<usize>) {
 
     handle_line(column_vals, &column_numbers);
 
-    read_buf = String::new();
+    read_buf.clear();
     line = input.read_line(&mut read_buf);
   }
 }
