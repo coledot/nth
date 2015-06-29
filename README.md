@@ -20,7 +20,7 @@ an opportunity to learn Rust, and to scratch a command line itch.
 
 ### what about `awk`?
 
-filtering by columns is a basic use case for awk, and having a separate tool to do so reduces the semantic overhead of writing out commands. no more `awk "{print $1, $2, $3}"` verbosity, instead just `nth 1 2 3`.
+filtering by columns is a basic use case for awk, and having a separate tool to do so reduces the syntactic overhead of writing out commands. no more `awk "{print $1, $2, $3}"` verbosity, instead just `nth 1 2 3`.
 
 ## License
 
