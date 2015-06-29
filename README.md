@@ -12,7 +12,7 @@ a Unix command-line utility to filter output by column numbers
 
 ## why?
 
-an opportunity to learn Rust, and to scratch a commandline itch.
+an opportunity to learn Rust, and to scratch a command line itch.
 
 ### what about `cut`?
 
