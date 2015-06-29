@@ -1,5 +1,3 @@
-extern crate regex;
-
 use std::env;
 use std::io::*;
 use std::process::exit;
