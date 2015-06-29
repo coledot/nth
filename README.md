@@ -1,10 +1,10 @@
 # nth
 
-a Unix command-line utility to filter output by column numbers
+a Unix command line utility to filter stdin by column numbers
 
 ## usage
 
-`nth <columns>`, each column being an integer index
+`cat foo | nth <columns>`, each column being an integer index
 
 ## building
 
