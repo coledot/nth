@@ -6,19 +6,18 @@ use std::process::exit;
 use std::str::FromStr;
 
 fn main() {
-  let arguments: Vec<_> = env::args().collect();
-  let column_numbers = parse_args(arguments);
+  let mut arguments: Vec<_> = env::args().collect();
+  let column_numbers = parse_args(&mut arguments);
 
   handle_input(&column_numbers); 
 }
 
-fn parse_args(arguments: Vec<String>) -> Vec<usize> {
+fn parse_args(arguments: &mut Vec<String>) -> Vec<usize> {
   if arguments.len() <= 1 {
     usage_err_exit();
   }
-  let mut columns = arguments.clone();
-  columns.remove(0);
-  let column_numbers: Vec<usize> = columns.iter().map(|x| {
+  arguments.remove(0);
+  let column_numbers: Vec<usize> = arguments.iter().map(|x| {
     let col_arg = FromStr::from_str(x);
     if !col_arg.is_ok() {
       usage_err_exit();
