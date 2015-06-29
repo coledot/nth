@@ -4,13 +4,13 @@ use std::process::exit;
 use std::str::FromStr;
 
 fn main() {
-  let mut arguments: Vec<_> = env::args().collect();
-  let column_numbers = parse_args(&mut arguments);
+  let column_numbers = parse_args();
 
   handle_input(&column_numbers); 
 }
 
-fn parse_args(arguments: &mut Vec<String>) -> Vec<usize> {
+fn parse_args() -> Vec<usize> {
+  let mut arguments: Vec<_> = env::args().collect();
   if arguments.len() <= 1 {
     usage_err_exit();
   }
