@@ -1,56 +1,60 @@
 use std::env;
-use std::io::*;
+use std::io::{stdin, Write, stderr, Error};
 use std::process::exit;
-use std::str::FromStr;
 
 fn main() {
   let column_numbers = parse_args();
+  if column_numbers.is_empty() {
+    usage_err_exit(None);
+  }
 
-  handle_input(&column_numbers); 
+  if let Err(err) = handle_input(&column_numbers) {
+    writeln!(stderr(), "Error when reading from stdin: {}", err);
+    exit(1);
+  }
 }
 
 fn parse_args() -> Vec<usize> {
-  let mut arguments: Vec<_> = env::args().collect();
-  if arguments.len() <= 1 {
-    usage_err_exit();
-  }
-  arguments.remove(0);
-  let column_numbers: Vec<usize> = arguments.iter().map(|x| {
-    let col_arg = FromStr::from_str(x);
-    if !col_arg.is_ok() {
-      usage_err_exit();
+  env::args().skip(1).map(|x| {
+    match x.parse::<isize>() {
+      Ok(val) if val < 1 => usage_err_exit(Some("Column numbers must be larger 1".to_string())),
+      Ok(val) => val as usize,
+      Err(err) => usage_err_exit(Some(format!("Failed to parse '{}' with error: {}", x, err))),
     }
-    return col_arg.unwrap();
-  }).collect();
-
-  return column_numbers;
+  }).collect()
 }
 
-fn usage_err_exit() {
-  println!("usage: nth <columns>");
+fn usage_err_exit(msg: Option<String>) -> ! {
+  writeln!(stderr(), "usage: nth <column-no> [<column-no> ...]");
+  if let Some(msg) = msg {
+    writeln!(stderr(), "\n{}", msg);
+  }
   exit(1);
 }
 
-fn handle_input(column_numbers: &Vec<usize>) {
+fn handle_input(column_numbers: &Vec<usize>) -> Result<(), Error> {
   let mut input = stdin();
-  let mut read_buf: String = String::new();
-  let mut line = input.read_line(&mut read_buf);
+  let mut read_buf = String::new();
 
-  while line.is_ok() && line.unwrap() > 0 {
-    let line_val = read_buf.clone();
-    let column_vals: Vec<&str> = line_val.split_whitespace().collect();
+  loop {
+    let bytes_read = try!(input.read_line(&mut read_buf));
+    if bytes_read == 0 {
+      return Ok(())
+    }
 
-    handle_line(column_vals, &column_numbers);
-
+    {
+      let column_vals: Vec<&str> = read_buf.split_whitespace().collect();
+      handle_line(column_vals, &column_numbers);
+    }
     read_buf.clear();
-    line = input.read_line(&mut read_buf);
   }
 }
 
 fn handle_line(column_vals: Vec<&str>, column_numbers: &Vec<usize>) {
   for col_num in column_numbers.iter() {
-    if (col_num - 1) >= column_vals.len() { continue; }
-    print!("{} ", column_vals[col_num - 1]);
+    if let Some(val) = column_vals.get(col_num - 1) {
+      print!("{} ", val);
+    }
   }
   println!("");
 }
