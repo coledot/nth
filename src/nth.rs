@@ -9,7 +9,7 @@ fn main() {
   }
 
   if let Err(err) = handle_input(&column_numbers) {
-    writeln!(stderr(), "Error when reading from stdin: {}", err);
+    writeln!(stderr(), "Error when reading from stdin: {}", err).ok();
     exit(1);
   }
 }
@@ -25,14 +25,14 @@ fn parse_args() -> Vec<usize> {
 }
 
 fn usage_err_exit(msg: Option<String>) -> ! {
-  writeln!(stderr(), "usage: nth <column-no> [<column-no> ...]");
+  writeln!(stderr(), "usage: nth <column-no> [<column-no> ...]").ok();
   if let Some(msg) = msg {
-    writeln!(stderr(), "\n{}", msg);
+    writeln!(stderr(), "\n{}", msg).ok();
   }
   exit(1);
 }
 
-fn handle_input(column_numbers: &Vec<usize>) -> Result<(), Error> {
+fn handle_input(column_numbers: &[usize]) -> Result<(), Error> {
   let mut input = stdin();
   let mut read_buf = String::new();
 
@@ -42,15 +42,14 @@ fn handle_input(column_numbers: &Vec<usize>) -> Result<(), Error> {
       return Ok(())
     }
 
-    {
-      let column_vals: Vec<&str> = read_buf.split_whitespace().collect();
-      handle_line(column_vals, &column_numbers);
-    }
+      
+    handle_line(&read_buf, &column_numbers);
     read_buf.clear();
   }
 }
 
-fn handle_line(column_vals: Vec<&str>, column_numbers: &Vec<usize>) {
+fn handle_line(read_buf: &String, column_numbers: &[usize]) {
+  let column_vals: Vec<&str> = read_buf.split_whitespace().collect();
   for col_num in column_numbers.iter() {
     if let Some(val) = column_vals.get(col_num - 1) {
       print!("{} ", val);
