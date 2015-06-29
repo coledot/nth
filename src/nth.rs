@@ -10,23 +10,21 @@ fn main() {
 }
 
 fn parse_args() -> Vec<usize> {
-  let mut arguments: Vec<_> = env::args().collect();
-  if arguments.len() <= 1 {
+  let arguments: Vec<_> = env::args().collect();
+  if arguments.len() < 1 {
     usage_err_exit();
   }
-  arguments.remove(0);
-  let column_numbers: Vec<usize> = arguments.iter().map(|x| {
+
+  arguments.iter().map(|x| {
     let col_arg = FromStr::from_str(x);
     if !col_arg.is_ok() {
       usage_err_exit();
     }
-    return col_arg.unwrap();
-  }).collect();
-
-  return column_numbers;
+    col_arg.unwrap()
+  }).collect()
 }
 
-fn usage_err_exit() {
+fn usage_err_exit() -> ! {
   println!("usage: nth <columns>");
   exit(1);
 }
