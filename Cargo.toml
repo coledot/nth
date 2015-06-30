@@ -1,6 +1,6 @@
 [package]
 name = "nth"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Cole Thompson <cole.thompson@gmail.com>"]
 
 [[bin]]
