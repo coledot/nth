@@ -64,7 +64,7 @@ fn parse_line(out_buf: &mut String, read_buf: &String, column_numbers: &[usize])
 fn parse_line_test() {
     let mut input = String::new();
     let mut line = String::new();
-    input.push_str("a b c d e");
+    input.push_str("a b  c   d     e");
 
     parse_line(&mut line, &input, &[1, 3]);
     assert!(line == "a c ");
