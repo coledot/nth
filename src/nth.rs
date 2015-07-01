@@ -36,6 +36,7 @@ fn handle_input(column_numbers: &[usize]) -> Result<(), Error> {
   let mut input = stdin();
   let mut out_buf = BufWriter::new(stdout());
   let mut read_buf = String::new();
+  let mut write_buf = String::new();
 
   loop {
     let bytes_read = try!(input.read_line(&mut read_buf));
@@ -43,10 +44,10 @@ fn handle_input(column_numbers: &[usize]) -> Result<(), Error> {
       return Ok(())
     }
 
-    let mut write_buf = String::new();
     parse_line(&mut write_buf, &read_buf, &column_numbers);
     writeln!(out_buf, "{}", write_buf).unwrap();
     read_buf.clear();
+    write_buf.clear();
   }
 }
 
