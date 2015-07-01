@@ -1,5 +1,5 @@
 use std::env;
-use std::io::{stderr, stdin, stdout, BufWriter, Error, Stdout, Write};
+use std::io::{stderr, stdin, stdout, BufWriter, Error, Write};
 use std::process::exit;
 
 fn main() {
@@ -43,18 +43,42 @@ fn handle_input(column_numbers: &[usize]) -> Result<(), Error> {
       return Ok(())
     }
 
-    handle_line(&mut out_buf, &read_buf, &column_numbers);
+    let mut write_buf = String::new();
+    parse_line(&mut write_buf, &read_buf, &column_numbers);
+    writeln!(out_buf, "{}", write_buf).unwrap();
     read_buf.clear();
   }
 }
 
-fn handle_line(out_buf: &mut BufWriter<Stdout>, read_buf: &String, column_numbers: &[usize]) {
-  let column_vals: Vec<&str> = read_buf.split_whitespace().collect();
+fn parse_line(out_buf: &mut String, read_buf: &String, column_numbers: &[usize]) {
+  let line_values: Vec<&str> = read_buf.split_whitespace().collect();
   for col_num in column_numbers.iter() {
-    if let Some(val) = column_vals.get(col_num - 1) {
-      write!(out_buf, "{} ", val).unwrap();
+    if let Some(val) = line_values.get(col_num - 1) {
+      out_buf.push_str(val);
+      out_buf.push_str(" ");
     }
   }
-  writeln!(out_buf, "").unwrap();
 }
 
+#[test]
+fn parse_line_test() {
+    let mut input = String::new();
+    let mut line = String::new();
+    input.push_str("a b c d e");
+
+    parse_line(&mut line, &input, &[1, 3]);
+    assert!(line == "a c ");
+    line.clear();
+
+    parse_line(&mut line, &input, &[2, 5]);
+    assert!(line == "b e ");
+    line.clear();
+
+    parse_line(&mut line, &input, &[1, 2, 1]);
+    assert!(line == "a b a ");
+    line.clear();
+
+    parse_line(&mut line, &input, &[6, 5, 4]);
+    assert!(line == "e d ");
+    line.clear();
+}
