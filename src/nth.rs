@@ -1,6 +1,10 @@
+extern crate time;
+
 use std::env;
 use std::io::{stderr, stdin, stdout, BufWriter, Error, Write};
 use std::process::exit;
+
+use time::{Duration, SteadyTime};
 
 fn main() {
   let column_numbers = parse_args();
@@ -33,10 +37,11 @@ fn usage_err_exit(msg: Option<String>) -> ! {
 }
 
 fn handle_input(column_numbers: &[usize]) -> Result<(), Error> {
-  let mut input = stdin();
+  let input = stdin();
   let mut out_buf = BufWriter::new(stdout());
   let mut read_buf = String::new();
   let mut write_buf = String::new();
+  let mut last_flush_time = SteadyTime::now();
 
   loop {
     let bytes_read = try!(input.read_line(&mut read_buf));
@@ -48,15 +53,21 @@ fn handle_input(column_numbers: &[usize]) -> Result<(), Error> {
     writeln!(out_buf, "{}", write_buf).unwrap();
     read_buf.clear();
     write_buf.clear();
+
+    let right_now = SteadyTime::now();
+    if right_now - last_flush_time >= Duration::milliseconds(10) {
+      try!(out_buf.flush());
+      last_flush_time = right_now;
+    }
   }
 }
 
-fn parse_line(out_buf: &mut String, read_buf: &String, column_numbers: &[usize]) {
+fn parse_line(write_buf: &mut String, read_buf: &String, column_numbers: &[usize]) {
   let line_values: Vec<&str> = read_buf.split_whitespace().collect();
   for col_num in column_numbers.iter() {
     if let Some(val) = line_values.get(col_num - 1) {
-      out_buf.push_str(val);
-      out_buf.push_str(" ");
+      write_buf.push_str(val);
+      write_buf.push_str(" ");
     }
   }
 }

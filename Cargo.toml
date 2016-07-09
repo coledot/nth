@@ -1,7 +1,10 @@
 [package]
 name = "nth"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Cole Thompson <cole.thompson@gmail.com>"]
+
+[dependencies]
+time = "0.1.35"
 
 [[bin]]
 name = "nth"
